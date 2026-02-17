@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Help - Neko Hosting</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <style>
+        body {
+            background-color: #f0f0f0;
+            color: #111;
+            font-family: monospace;
+            padding: 15px;
+            margin: 0;
+            min-height: 100vh;
+            box-sizing: border-box;
+            line-height: 1.5;
+            font-size: 13px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        h1 {
+            font-size: 18px;
+            margin: 0 0 20px 0;
+            font-weight: bold;
+        }
+
+        h2 {
+            font-size: 14px;
+            margin: 20px 0 10px 0;
+            font-weight: bold;
+            border-bottom: 2px solid #333;
+            padding-bottom: 5px;
+        }
+
+        .content-box {
+            background: #fff;
+            border: 2px solid #333;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        a {
+            color: #0000EE;
+            text-decoration: underline;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-area img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-title {
+            font-size: 20px;
+            font-weight: bold;
+            line-height: 1.1;
+        }
+
+        .logo-subtitle {
+            font-size: 10px;
+            margin-top: 2px;
+        }
+
+        code {
+            background: #e0e0e0;
+            padding: 2px 6px;
+            font-family: monospace;
+        }
+
+        pre {
+            background: #e0e0e0;
+            padding: 10px;
+            overflow-x: auto;
+            border: 1px solid #ccc;
+        }
+
+        footer {
+            margin-top: 20px;
+            font-size: 11px;
+            color: #333;
+            padding-bottom: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header style="margin-bottom: 20px;">
+            <div class="logo-area">
+                <img src="/logo.webp" alt="Neko Hosting Logo">
+                <div class="logo-text">
+                    <div class="logo-title">neko</div>
+                    <div class="logo-subtitle"><span id="totalStorage">Loading...</span></div>
+                </div>
+            </div>
+        </header>
+
+        <div class="content-box">
+            <h1>HELP CENTER</h1>
+
+            <h2>UPLOADING FILES</h2>
+            <p>Drag and drop files onto the homepage or click to select. Maximum file size: 2GB.</p>
+
+            <h2 id="api">API USAGE</h2>
+            <p>Upload any file via our simple API:</p>
+            <pre>curl -X POST https://nekoo.ru/api/upload \
+  -F "file=@yourfile.png"</pre>
+
+            <p><strong>Response (instant):</strong></p>
+            <pre>{
+  "status": "success",
+  "url": "https://cdn.dropl.link/12345678901234567890.png",
+  "slug": "12345678901234567890.png",
+  "id": 123,
+  "hash": "abc123...",
+  "size": 12345,
+  "original_filename": "yourfile.png",
+  "created_at": "2026-02-05T00:00:00Z"
+}</pre>
+
+            <h2>FAST UPLOAD TECHNOLOGY</h2>
+            <p>Our API returns your URL <strong>instantly</strong> (~50ms). The file is stored in our database
+                immediately, and backup upload happens in the background. No waiting!</p>
+
+            <h2>DEDUPLICATION</h2>
+            <p>If you upload the same file twice, you get the same URL instantly. No duplicate storage.</p>
+
+            <h2>FILE EXPIRATION (TTL)</h2>
+            <p>Set a time-to-live via query parameter:</p>
+            <pre>POST /api/upload?ttl=1h   (expires in 1 hour)
+POST /api/upload?ttl=12h  (expires in 12 hours)
+POST /api/upload?ttl=24h  (expires in 24 hours)
+POST /api/upload?ttl=7d   (expires in 7 days)</pre>
+
+            <h2>SHAREX CONFIGURATION</h2>
+            <p>Configure ShareX with:</p>
+            <ul>
+                <li>Request URL: <code>https://nekoo.ru/api/upload</code></li>
+                <li>Request Method: POST</li>
+                <li>File Form Name: file</li>
+                <li>Response URL: <code>$json:url$</code></li>
+            </ul>
+
+            <h2>SCREENSHOT APP</h2>
+            <p>Download our <a href="https://github.com/KupQ/seko/releases">Seko Screenshot Tool</a> for Windows.</p>
+
+            <h2>CONTACT</h2>
+            <p>Email: <a href="mailto:help@nekoo.ru">help@nekoo.ru</a></p>
+
+            <p style="margin-top: 30px; text-align: center;">
+                <a href="/">← Back to home</a>
+            </p>
+        </div>
+
+        <footer>
+            &copy; <span id="year">2005</span> Neko Corp. &bull; v1.5<br>
+            <a href="/help" style="color:#333;">[ HELP ]</a> &bull;
+            <a href="/terms" style="color:#333;">[ TERMS ]</a> &bull;
+            <a href="/help#api" style="color:#333;">[ API ]</a> &bull;
+            <a href="mailto:help@nekoo.ru" style="color:#333;">[ CONTACT ]</a>
+        </footer>
+    </div>
+
+    <script>
+        document.getElementById('year').innerText = new Date().getFullYear();
+        fetch('/api/stats').then(r => r.json()).then(data => {
+            document.getElementById('totalStorage').innerText = data.total_gb + ' GB';
+        }).catch(() => {
+            document.getElementById('totalStorage').innerText = '0.00 GB';
+        });
+    </script>
+</body>
+
+</html>

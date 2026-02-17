@@ -1,0 +1,21 @@
+# Rust
+target/
+Cargo.lock
+
+# Database (we'll backup separately)
+nekoo.db
+nekoo.db-shm
+nekoo.db-wal
+
+# Temp files
+*.tmp
+*.swp
+*~
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+db_backups/
+.env

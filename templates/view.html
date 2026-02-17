@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Neko Code Viewer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="View code and text files hosted on Neko File Hosting.">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <!-- Retro Solarized Light Theme for Syntax -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-solarizedlight.min.css"
+        rel="stylesheet" />
+    <style>
+        body {
+            background-color: #fdf6e3;
+            /* Solarized base3 */
+            color: #657b83;
+            font-family: monospace;
+            padding: 15px;
+            margin: 0;
+            line-height: 1.3;
+            font-size: 13px;
+            /* Compact */
+        }
+
+        .header {
+            margin-bottom: 15px;
+            border-bottom: 2px dashed #586e75;
+            padding-bottom: 5px;
+        }
+
+        a {
+            color: #268bd2;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 2px;
+            display: inline-block;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        button {
+            cursor: pointer;
+            border: 2px solid #586e75;
+            background: #eee8d5;
+            padding: 4px 8px;
+            /* Compact */
+            font-family: monospace;
+            min-height: 28px;
+            min-width: 28px;
+            font-size: 11px;
+        }
+
+        #code-container {
+            border: 1px solid #93a1a1;
+            background: #fdf6e3;
+            padding: 10px;
+            overflow-x: auto;
+        }
+
+        main {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <div class="header">
+            <a href="/" aria-label="Go home">&lt;&lt; NEKO HOME</a> |
+            <span id="filename">Loading...</span> |
+            <a id="raw-link" href="#">RAW</a>
+        </div>
+
+        <pre><code id="code-block" class="language-clike">Loading content...</code></pre>
+    </main>
+
+    <footer style="margin-top:20px; font-size:10px; color:#93a1a1; text-align:center;">
+        Neko View • v1.5
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script>
+        // Get slug from URL: /view/SLUG
+        var segments = window.location.pathname.split('/');
+        var slug = segments[segments.length - 1]; // Last part
+
+        var rawUrl = '/' + slug;
+        document.getElementById('raw-link').href = rawUrl;
+
+        fetch(rawUrl)
+            .then(r => {
+                // Get filename from header if possible, or just deduce
+                // For now, we just display the slug or generic name
+                document.title = "Neko View: " + slug;
+                document.getElementById('filename').innerText = slug;
+                return r.text();
+            })
+            .then(text => {
+                var codeBlock = document.getElementById('code-block');
+                codeBlock.textContent = text;
+
+                // Try to detect language? 
+                // Simple heuristic or just generic 'clike'
+                // Ideally, we'd pass filename extension to header to know language.
+                // But for now, let's just highlight.
+                Prism.highlightAll();
+            })
+            .catch(e => {
+                document.getElementById('code-block').innerText = "Error loading file: " + e;
+            });
+    </script>
+</body>
+
+</html>

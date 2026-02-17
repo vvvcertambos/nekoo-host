@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Terms of Service - Neko Hosting</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <style>
+        body {
+            background-color: #f0f0f0;
+            color: #111;
+            font-family: monospace;
+            padding: 15px;
+            margin: 0;
+            min-height: 100vh;
+            box-sizing: border-box;
+            line-height: 1.5;
+            font-size: 13px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        h1 {
+            font-size: 18px;
+            margin: 0 0 20px 0;
+            font-weight: bold;
+        }
+
+        h2 {
+            font-size: 14px;
+            margin: 20px 0 10px 0;
+            font-weight: bold;
+            border-bottom: 2px solid #333;
+            padding-bottom: 5px;
+        }
+
+        .content-box {
+            background: #fff;
+            border: 2px solid #333;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        a {
+            color: #0000EE;
+            text-decoration: underline;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-area img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-title {
+            font-size: 20px;
+            font-weight: bold;
+            line-height: 1.1;
+        }
+
+        .logo-subtitle {
+            font-size: 10px;
+            margin-top: 2px;
+        }
+
+        .updated {
+            font-size: 11px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        footer {
+            margin-top: 20px;
+            font-size: 11px;
+            color: #333;
+            padding-bottom: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header style="margin-bottom: 20px;">
+            <div class="logo-area">
+                <img src="/logo.webp" alt="Neko Hosting Logo">
+                <div class="logo-text">
+                    <div class="logo-title">neko</div>
+                    <div class="logo-subtitle"><span id="totalStorage">Loading...</span></div>
+                </div>
+            </div>
+        </header>
+
+        <div class="content-box">
+            <h1>TERMS OF SERVICE</h1>
+            <div class="updated">Last updated: February 5, 2026</div>
+
+            <h2>1. ACCEPTANCE</h2>
+            <p>By using Neko Hosting (nekoo.ru), you agree to these terms. If you don't agree, don't use the service.
+            </p>
+
+            <h2>2. SERVICE DESCRIPTION</h2>
+            <p>Neko Hosting provides free file hosting. Files are stored indefinitely unless a TTL is specified.</p>
+
+            <h2>3. PROHIBITED CONTENT</h2>
+            <p>You may NOT upload:</p>
+            <ul>
+                <li>Illegal content (malware, pirated software, CSAM)</li>
+                <li>Content that violates others' rights</li>
+                <li>Spam or phishing content</li>
+            </ul>
+            <p>Violators will be banned and reported to authorities.</p>
+
+            <h2>4. PRIVACY</h2>
+            <p>Files uploaded with authentication are marked as private. Public uploads may appear in galleries.</p>
+
+            <h2>5. NO WARRANTY</h2>
+            <p>The service is provided "AS IS". We don't guarantee uptime, data persistence, or anything else. Back up
+                your important files.</p>
+
+            <h2>6. DMCA / TAKEDOWNS</h2>
+            <p>To request content removal, email <a href="mailto:help@nekoo.ru">help@nekoo.ru</a> with:</p>
+            <ul>
+                <li>The URL of the content</li>
+                <li>Proof of ownership</li>
+                <li>Your contact information</li>
+            </ul>
+
+            <h2>7. LIMITATION OF LIABILITY</h2>
+            <p>We are not liable for any damages resulting from use of this service.</p>
+
+            <h2>8. CHANGES</h2>
+            <p>We may update these terms at any time. Continued use = acceptance.</p>
+
+            <p style="margin-top: 30px; text-align: center;">
+                <a href="/">← Back to home</a>
+            </p>
+        </div>
+
+        <footer>
+            &copy; <span id="year">2005</span> Neko Corp. &bull; v1.5<br>
+            <a href="/help" style="color:#333;">[ HELP ]</a> &bull;
+            <a href="/terms" style="color:#333;">[ TERMS ]</a> &bull;
+            <a href="/help#api" style="color:#333;">[ API ]</a> &bull;
+            <a href="mailto:help@nekoo.ru" style="color:#333;">[ CONTACT ]</a>
+        </footer>
+    </div>
+
+    <script>
+        document.getElementById('year').innerText = new Date().getFullYear();
+        fetch('/api/stats').then(r => r.json()).then(data => {
+            document.getElementById('totalStorage').innerText = data.total_gb + ' GB';
+        }).catch(() => {
+            document.getElementById('totalStorage').innerText = '0.00 GB';
+        });
+    </script>
+</body>
+
+</html>

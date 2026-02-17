@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Neko Hosting</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <style>
+        body {
+            background-color: #f0f0f0;
+            color: #111;
+            font-family: monospace;
+            padding: 15px;
+            margin: 0;
+            min-height: 100vh;
+            font-size: 13px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .login-box {
+            background: #fff;
+            border: 2px solid #333;
+            padding: 20px;
+            max-width: 300px;
+            margin: 50px auto;
+        }
+
+        input,
+        button {
+            font-family: monospace;
+            padding: 8px;
+            margin: 5px 0;
+            width: 100%;
+            box-sizing: border-box;
+            border: 2px solid #333;
+        }
+
+        button {
+            background: #e0e0e0;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #ccc;
+        }
+
+        .stats {
+            background: #fff;
+            border: 2px solid #333;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .actions {
+            display: grid;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px;
+            text-align: center;
+            background: #e0e0e0;
+            border: 2px solid #333;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            background: #ccc;
+        }
+
+        .btn.danger {
+            background: #ffcccc;
+            border-color: #990000;
+        }
+
+        #output {
+            background: #000;
+            color: #0f0;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 11px;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div id="loginSection" class="login-box">
+            <h1>ADMIN LOGIN</h1>
+            <input type="password" id="adminKey" placeholder="Admin Key">
+            <button onclick="login()">[ LOGIN ]</button>
+        </div>
+        <div id="adminSection" style="display: none;">
+            <h1>NEKO ADMIN PANEL</h1>
+            <div class="stats" id="stats">Loading...</div>
+            <div class="actions">
+                <button class="btn" onclick="action('dashboard')">Refresh Stats</button>
+                <button class="btn" onclick="action('tokens')">View Tokens</button>
+                <button class="btn" onclick="action('backup')">Backup Database</button>
+                <button class="btn" onclick="action('logs')">View Logs</button>
+                <button class="btn danger" onclick="action('maintenance')">Toggle Maintenance</button>
+            </div>
+            <pre id="output"></pre>
+        </div>
+    </div>
+    <script>
+        let key = '';
+        function login() {
+            key = document.getElementById('adminKey').value;
+            if (key) {
+                document.getElementById('loginSection').style.display = 'none';
+                document.getElementById('adminSection').style.display = 'block';
+                action('dashboard');
+            }
+        }
+        async function action(name) {
+            const output = document.getElementById('output');
+            output.style.display = 'block';
+            output.textContent = 'Loading...';
+            try {
+                const resp = await fetch('/api/admin/' + name, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ key })
+                });
+                const data = await resp.json();
+                if (name === 'dashboard') {
+                    document.getElementById('stats').innerHTML = `
+                        <strong>FILES:</strong> ${data.total_files || 0}<br>
+                        <strong>STORAGE:</strong> ${((data.total_size || 0) / 1024 / 1024 / 1024).toFixed(2)} GB<br>
+                        <strong>TOKENS:</strong> ${data.tokens || 0}
+                    `;
+                }
+                output.textContent = JSON.stringify(data, null, 2);
+            } catch (e) {
+                output.textContent = 'Error: ' + e.message;
+            }
+        }
+    </script>
+</body>
+
+</html>
