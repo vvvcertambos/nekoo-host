@@ -43,7 +43,7 @@ pub static MAINTENANCE_MODE: AtomicBool = AtomicBool::new(false);
 pub async fn admin_panel(headers: HeaderMap) -> impl IntoResponse {
     if let Some(host) = headers.get("host") {
         if let Ok(host_str) = host.to_str() {
-            if host_str.contains("cdn.nekoo.eu.org") {
+            if host_str.contains("cdn.nekoo.ru") {
                  return (StatusCode::NOT_FOUND, Html(include_str!("../templates/404.html"))).into_response();
             }
         }
@@ -346,7 +346,7 @@ pub async fn admin_slurp(
 pub async fn index(headers: HeaderMap) -> impl IntoResponse {
     if let Some(host) = headers.get("host") {
         if let Ok(host_str) = host.to_str() {
-            if host_str.contains("cdn.nekoo.eu.org") {
+            if host_str.contains("cdn.nekoo.ru") {
                  return (StatusCode::NOT_FOUND, Html(include_str!("../templates/404.html"))).into_response();
             }
         }
@@ -367,7 +367,7 @@ pub async fn index(headers: HeaderMap) -> impl IntoResponse {
 pub async fn view_code(headers: HeaderMap) -> impl IntoResponse {
     if let Some(host) = headers.get("host") {
         if let Ok(host_str) = host.to_str() {
-            if host_str.contains("cdn.nekoo.eu.org") {
+            if host_str.contains("cdn.nekoo.ru") {
                  return (StatusCode::NOT_FOUND, Html(include_str!("../templates/404.html"))).into_response();
             }
         }
@@ -598,7 +598,7 @@ pub async fn upload(
     Json(json!({
         "files": [{
             "status": "success",
-            "url": format!("https://cdn.nekoo.eu.org/{}", slug),
+            "url": format!("https://cdn.nekoo.ru/{}", slug),
             "slug": slug,
             "id": row_id,
             "size": file_size,
@@ -1062,7 +1062,7 @@ pub async fn upload_finalize(
     Json(json!({
         "files": [{
             "status": "success",
-            "url": format!("https://cdn.nekoo.eu.org/{}", slug),
+            "url": format!("https://cdn.nekoo.ru/{}", slug),
             "slug": slug,
             "id": row_id,
             "size": file_size,
